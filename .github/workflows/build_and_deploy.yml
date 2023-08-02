@@ -84,28 +84,42 @@ jobs:
       with:
         name: tarballs
 
-    - name: Upload DEB package to packagecloud
-      uses: danielmundi/upload-packagecloud@v1
+    - name: Upload DEB package to Cloudsmith
+      uses: cloudsmith-io/action@master
       with:
-        PACKAGE-NAME: '*.deb'
-        PACKAGECLOUD-USERNAME: ${{ secrets.PACKAGECLOUD_USERNAME }}
-        PACKAGECLOUD-REPO: ${{ secrets.PACKAGECLOUD_REPOSITORY }}
-        PACKAGECLOUD-DISTRIB: 'ubuntu/trusty'
-        PACKAGECLOUD-TOKEN: ${{ secrets.PACKAGECLOUD_API_TOKEN }}
+        api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
+        command: 'push'
+        format: 'deb'
+        owner: 'OWNER'             # Your Cloudsmith account name or org name (namespace)
+        repo: 'REPOSITORY'         # Your Cloudsmith Repository name (slug)
+        distro: 'ubuntu'           # Your Distribution (i.e Debian, Ubuntu)
+        release: 'trusty'          # Your Distribution Release (i.e xenial, buster)
+        republish: 'true'          # needed ONLY if version is not changing
+        file: '*.deb'              # debian package filename
 
-    - name: Upload RPM package to packagecloud
-      uses: danielmundi/upload-packagecloud@v1
+    - name: Upload RPM package to Cloudsmith
+      uses: cloudsmith-io/action@master
       with:
-        PACKAGE-NAME: '*.rpm'
-        PACKAGECLOUD-USERNAME: ${{ secrets.PACKAGECLOUD_USERNAME }}
-        PACKAGECLOUD-REPO: ${{ secrets.PACKAGECLOUD_REPOSITORY }}
-        PACKAGECLOUD-DISTRIB: 'el/8'
-        PACKAGECLOUD-TOKEN: ${{ secrets.PACKAGECLOUD_API_TOKEN }}
+        api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
+        command: 'push'
+        format: 'rpm'
+        owner: 'OWNER'             # Your Cloudsmith account name or org name (namespace)
+        repo: 'REPOSITORY'         # Your Cloudsmith Repository name (slug)
+        distro: 'el'               # Your Distribution (i.e el, fedora)
+        release: '8'               # Your Distribution Release (i.e 7, 32)
+        republish: 'true'          # needed ONLY if version is not changing
+        file: '*.rpm'              #rpm package filename
 
-    - name: Upload Tarballs to packagecloud
-      uses: danielmundi/upload-packagecloud@v1
+    - name: Upload Tarballs to Cloudsmith
+      uses: cloudsmith-io/action@master
       with:
-        PACKAGE-NAME: '*.tar.gz'
-        PACKAGECLOUD-USERNAME: ${{ secrets.PACKAGECLOUD_USERNAME }}
-        PACKAGECLOUD-REPO: ${{ secrets.PACKAGECLOUD_REPOSITORY }}
-        PACKAGECLOUD-TOKEN: ${{ secrets.PACKAGECLOUD_API_TOKEN }}
+        api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
+        command: 'push'
+        format: 'raw'
+        owner: 'OWNER'              # Your Cloudsmith account name or org name (namespace)
+        repo: 'REPOSITORY'          # Your Cloudsmith Repository name (slug)
+        file: '*.tar.gz'            # Name of file
+        name: 'key-manager'         # Name for Raw package
+        summary: 'key-manager summary'  # Optional Summary for Raw Package
+        description: 'key-manager description'  # Optional description for Raw package
+        version: ${{ github.sha }}
