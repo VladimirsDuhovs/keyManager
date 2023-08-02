@@ -20,20 +20,16 @@ jobs:
     - name: Build
       run: go build -o key-manager
 
-    - name: Install Docker
+    - name: Install FPM
       run: |
         sudo apt-get update
-        sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
-        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-        sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-        sudo apt-get update
-        sudo apt-get install docker-ce
+        sudo apt-get install -y ruby ruby-dev rubygems build-essential rpm
+        sudo gem install --no-document fpm
 
     - name: Build packages with FPM
       run: |
-        sudo docker run --rm -v "$(pwd):/src" jordansissel/fpm:latest bash -c "\
-        fpm -s dir -t deb -n key-manager -v 1.0.0 /src/key-manager=/usr/local/bin/key-manager /src/install.sh=/usr/local/bin/install-key-manager.sh && \
-        fpm -s dir -t rpm -n key-manager -v 1.0.0 /src/key-manager=/usr/local/bin/key-manager /src/install.sh=/usr/local/bin/install-key-manager.sh"
+        fpm -s dir -t deb -n key-manager -v 1.0.0 ./key-manager=/usr/local/bin/key-manager ./install.sh=/usr/local/bin/install-key-manager.sh
+        fpm -s dir -t rpm -n key-manager -v 1.0.0 ./key-manager=/usr/local/bin/key-manager ./install.sh=/usr/local/bin/install-key-manager.sh
 
     - name: Upload DEB package
       uses: actions/upload-artifact@v2
