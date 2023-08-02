@@ -73,5 +73,5 @@ jobs:
         PACKAGE-NAME: '*.rpm'
         PACKAGECLOUD-USERNAME: ${{ secrets.PACKAGECLOUD_USERNAME }}
         PACKAGECLOUD-REPO: ${{ secrets.PACKAGECLOUD_REPOSITORY }}
-        PACKAGECLOUD-DISTRIB: 'centos/7'
+        PACKAGECLOUD-DISTRIB: 'enterprise_linux/8'
         PACKAGECLOUD-TOKEN: ${{ secrets.PACKAGECLOUD_API_TOKEN }}
