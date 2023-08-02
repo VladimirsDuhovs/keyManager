@@ -1,0 +1,66 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, build with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Dependency directories (remove the comment below if you want to check in your vendor folder)
+# vendor/
+
+# IDE/Editor Folders
+.vscode
+.idea
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*.swn
+*.swp
+
+# MacOS
+.DS_Store
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Directory for instrumented runs. See issue 2630.
+testdir
+
+# Dependency directories
+vendor/
+
+# Build artifact
+dist/
+
+# Generated files by JetBrains IDEs
+.idea/
+
+# Log files
+*.log
+
+# Database files
+*.db
+
+# Linux trash folder which might appear on any partition or disk
+.Trash-*
+
+# Ignore go build and test related files
+**/main
+**/main.test
+
+# GoLand .idea/ directory
+.idea/
