@@ -116,10 +116,52 @@ jobs:
         api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
         command: 'push'
         format: 'raw'
-        owner: 'vladimirsduhovs'              # Your Cloudsmith account name or org name (namespace)
-        repo: 'key-manager'          # Your Cloudsmith Repository name (slug)
-        file: '*.tar.gz'            # Name of file
-        name: 'key-manager'         # Name for Raw package
-        summary: 'key-manager summary'  # Optional Summary for Raw Package
-        description: 'key-manager description'  # Optional description for Raw package
+        owner: 'vladimirsduhovs'
+        repo: 'key-manager'
+        file: 'key-manager_darwin_amd64.tar.gz'
+        name: 'key-manager'
+        summary: 'key-manager summary'
+        description: 'key-manager description'
+        version: ${{ github.sha }}
+
+    - name: Upload Tarballs to Cloudsmith
+      uses: cloudsmith-io/action@master
+      with:
+        api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
+        command: 'push'
+        format: 'raw'
+        owner: 'vladimirsduhovs'
+        repo: 'key-manager'
+        file: 'key-manager_darwin_arm64.tar.gz'
+        name: 'key-manager'
+        summary: 'key-manager summary'
+        description: 'key-manager description'
+        version: ${{ github.sha }}
+
+    - name: Upload Tarballs to Cloudsmith
+      uses: cloudsmith-io/action@master
+      with:
+        api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
+        command: 'push'
+        format: 'raw'
+        owner: 'vladimirsduhovs'
+        repo: 'key-manager'
+        file: 'key-manager_linux_amd64.tar.gz'
+        name: 'key-manager'
+        summary: 'key-manager summary'
+        description: 'key-manager description'
+        version: ${{ github.sha }}
+
+    - name: Upload Tarballs to Cloudsmith
+      uses: cloudsmith-io/action@master
+      with:
+        api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
+        command: 'push'
+        format: 'raw'
+        owner: 'vladimirsduhovs'
+        repo: 'key-manager'
+        file: 'key-manager_windows_amd64.tar.gz'
+        name: 'key-manager'
+        summary: 'key-manager summary'
+        description: 'key-manager description'
         version: ${{ github.sha }}
