@@ -25,6 +25,9 @@ jobs:
       run: |
         gox -osarch="darwin/amd64 darwin/arm64 windows/amd64 linux/amd64" -output "dist/key-manager_{{.OS}}_{{.Arch}}"
 
+    - name: List the contents of the dist directory
+      run: ls -la dist
+
     - name: Install FPM
       run: |
         sudo apt-get update
