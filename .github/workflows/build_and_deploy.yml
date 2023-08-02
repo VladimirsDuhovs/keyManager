@@ -31,9 +31,9 @@ jobs:
 
     - name: Build packages with FPM
       run: |
-        sudo docker run --rm -v "$(pwd):/src" cdrx/fpm
-        sudo docker exec -it fpm fpm -s dir -t deb -n key-manager -v 1.0.0 /src/key-manager=/usr/local/bin/key-manager /src/install.sh=/usr/local/bin/install-key-manager.sh
-        sudo docker exec -it fpm fpm -s dir -t rpm -n key-manager -v 1.0.0 /src/key-manager=/usr/local/bin/key-manager /src/install.sh=/usr/local/bin/install-key-manager.sh
+        sudo docker run --rm -v "$(pwd):/src" jordansissel/fpm:latest bash -c "\
+        fpm -s dir -t deb -n key-manager -v 1.0.0 /src/key-manager=/usr/local/bin/key-manager /src/install.sh=/usr/local/bin/install-key-manager.sh && \
+        fpm -s dir -t rpm -n key-manager -v 1.0.0 /src/key-manager=/usr/local/bin/key-manager /src/install.sh=/usr/local/bin/install-key-manager.sh"
 
     - name: Upload DEB package
       uses: actions/upload-artifact@v2
