@@ -97,20 +97,7 @@ jobs:
         republish: 'true'          # needed ONLY if version is not changing
         file: '*.deb'              # debian package filename
 
-    - name: Upload RPM package to Cloudsmith
-      uses: cloudsmith-io/action@master
-      with:
-        api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
-        command: 'push'
-        format: 'rpm'
-        owner: 'vladimirsduhovs'             # Your Cloudsmith account name or org name (namespace)
-        repo: 'key-manager'         # Your Cloudsmith Repository name (slug)
-        distro: 'el'               # Your Distribution (i.e el, fedora)
-        release: '8'               # Your Distribution Release (i.e 7, 32)
-        republish: 'true'          # needed ONLY if version is not changing
-        file: '*.rpm'              #rpm package filename
-
-    - name: Upload Tarballs to Cloudsmith
+    - name: Upload Darwin AMD64 Tarball to Cloudsmith
       uses: cloudsmith-io/action@master
       with:
         api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
@@ -119,12 +106,12 @@ jobs:
         owner: 'vladimirsduhovs'
         repo: 'key-manager'
         file: 'key-manager_darwin_amd64.tar.gz'
-        name: 'key-manager'
+        name: 'key-manager_darwin_amd64'
         summary: 'key-manager summary'
         description: 'key-manager description'
         version: ${{ github.sha }}
 
-    - name: Upload Tarballs to Cloudsmith
+    - name: Upload Darwin ARM64 Tarball to Cloudsmith
       uses: cloudsmith-io/action@master
       with:
         api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
@@ -133,12 +120,12 @@ jobs:
         owner: 'vladimirsduhovs'
         repo: 'key-manager'
         file: 'key-manager_darwin_arm64.tar.gz'
-        name: 'key-manager'
+        name: 'key-manager_darwin_arm64'
         summary: 'key-manager summary'
         description: 'key-manager description'
         version: ${{ github.sha }}
 
-    - name: Upload Tarballs to Cloudsmith
+    - name: Upload Linux AMD64 Tarball to Cloudsmith
       uses: cloudsmith-io/action@master
       with:
         api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
@@ -147,12 +134,12 @@ jobs:
         owner: 'vladimirsduhovs'
         repo: 'key-manager'
         file: 'key-manager_linux_amd64.tar.gz'
-        name: 'key-manager'
+        name: 'key-manager_linux_amd64'
         summary: 'key-manager summary'
         description: 'key-manager description'
         version: ${{ github.sha }}
 
-    - name: Upload Tarballs to Cloudsmith
+    - name: Upload Windows AMD64 Tarball to Cloudsmith
       uses: cloudsmith-io/action@master
       with:
         api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
@@ -161,7 +148,7 @@ jobs:
         owner: 'vladimirsduhovs'
         repo: 'key-manager'
         file: 'key-manager_windows_amd64.tar.gz'
-        name: 'key-manager'
+        name: 'key-manager_windows_amd64'
         summary: 'key-manager summary'
         description: 'key-manager description'
         version: ${{ github.sha }}
