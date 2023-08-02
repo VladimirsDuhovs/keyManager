@@ -23,7 +23,7 @@ jobs:
 
     - name: Cross-compile binaries with gox
       run: |
-        gox -osarch="darwin/amd64 darwin/arm64 windows/amd64 linux/amd64" -output "dist/{{.Dir}}_{{.OS}}_{{.Arch}}"
+        gox -osarch="darwin/amd64 darwin/arm64 windows/amd64 linux/amd64" -output "dist/key-manager_{{.OS}}_{{.Arch}}"
 
     - name: Install FPM
       run: |
@@ -33,15 +33,15 @@ jobs:
 
     - name: Build packages with FPM
       run: |
-        fpm -s dir -t deb -n key-manager -v 1.0.0 ./dist/key-manager_linux_amd64=/usr/local/bin/key-manager ./install.sh=/usr/local/bin/install-key-manager.sh
-        fpm -s dir -t rpm -n key-manager -v 1.0.0 ./dist/key-manager_linux_amd64=/usr/local/bin/key-manager ./install.sh=/usr/local/bin/install-key-manager.sh
+        fpm -s dir -t deb -n key-manager -v 1.0.0 ./dist/key-manager_linux_amd64=/usr/local/bin/key-manager_linux_amd64 ./install.sh=/usr/local/bin/install-key-manager.sh
+        fpm -s dir -t rpm -n key-manager -v 1.0.0 ./dist/key-manager_linux_amd64=/usr/local/bin/key-manager_linux_amd64 ./install.sh=/usr/local/bin/install-key-manager.sh
 
     - name: Create Tarballs
       run: |
         tar czvf key-manager_linux_amd64.tar.gz -C dist key-manager_linux_amd64
         tar czvf key-manager_darwin_amd64.tar.gz -C dist key-manager_darwin_amd64
         tar czvf key-manager_darwin_arm64.tar.gz -C dist key-manager_darwin_arm64
-        tar czvf key-manager_windows_amd64.tar.gz -C dist key-manager_windows_amd64.exe
+        tar czvf key-manager_windows_amd64.tar.gz -C dist key-manager_windows_amd64
 
     - name: Upload DEB package
       uses: actions/upload-artifact@v2

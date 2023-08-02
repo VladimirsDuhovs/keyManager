@@ -1,36 +1,57 @@
 #!/bin/bash
 
-# Function to install SQLite3 and libsqlite3-dev on Ubuntu/Debian
+# Function to install SQLite3 on Ubuntu/Debian
 function install_sqlite3_debian() {
     sudo apt-get update && sudo apt-get install sqlite3 libsqlite3-dev -y
 }
 
-# Function to install SQLite3 and libsqlite3-dev on CentOS
+# Function to install SQLite3 on CentOS
 function install_sqlite3_centos() {
     sudo yum install sqlite sqlite-devel -y
 }
 
-# Function to install SQLite3 and libsqlite3-dev on Fedora
+# Function to install SQLite3 on Fedora
 function install_sqlite3_fedora() {
     sudo dnf install sqlite sqlite-devel -y
 }
 
-# Detect the OS
-OS=$(awk -F= '/^NAME/{print $2}' /etc/os-release)
+# Function to install SQLite3 on macOS
+function install_sqlite3_mac() {
+    brew install sqlite
+}
 
-# Install sqlite3 and libsqlite3-dev if they are not installed
+# Detect the OS
+OS=$(uname)
+
+# Install sqlite3 if they are not installed
 if ! command -v sqlite3 &> /dev/null
 then
     echo "sqlite3 is not installed, installing..."
     case $OS in
-        "\"Ubuntu\""| "\"Debian GNU/Linux\"")
-            install_sqlite3_debian
+        "Linux")
+            # Additional check for type of Linux distribution
+            DISTRO=$(awk -F= '/^NAME/{print $2}' /etc/os-release)
+            case $DISTRO in
+                "\"Ubuntu\""| "\"Debian GNU/Linux\"")
+                    install_sqlite3_debian
+                    ;;
+                "\"CentOS Linux\"")
+                    install_sqlite3_centos
+                    ;;
+                "\"Fedora\"")
+                    install_sqlite3_fedora
+                    ;;
+                *)
+                    echo "Unsupported Linux distribution. Please install SQLite3 manually."
+                    exit 1
+                    ;;
+            esac
             ;;
-        "\"CentOS Linux\"")
-            install_sqlite3_centos
+        "Darwin")
+            install_sqlite3_mac
             ;;
-        "\"Fedora\"")
-            install_sqlite3_fedora
+        "Windows_NT")
+            echo "Please install SQLite3 manually."
             ;;
         *)
             echo "Unsupported operating system. Please install SQLite3 manually."
@@ -41,11 +62,18 @@ else
     echo "sqlite3 is already installed"
 fi
 
-# Move the binary to /usr/local/bin
-echo "Moving binary to /usr/local/bin"
-sudo mv key-app /usr/local/bin
+# Move the binary to appropriate location
+if [[ $OS == "Windows_NT" ]]; then
+    echo "Moving binary to C:/Program Files"
+    move key-manager_windows_amd64.exe "C:/Program Files"
+else
+    echo "Moving binary to /usr/local/bin"
+    sudo mv key-manager_linux_amd64 /usr/local/bin
+fi
 
 # Give the binary execute permissions
-sudo chmod +x /usr/local/bin/key-app
+if [[ $OS != "Windows_NT" ]]; then
+    sudo chmod +x /usr/local/bin/key-manager_linux_amd64
+fi
 
-echo "Installation complete. You can now run the command 'key-app'"
+echo "Installation complete. You can now run the command 'key-manager_linux_amd64'"
