@@ -17,8 +17,13 @@ jobs:
       with:
         go-version: 1.17
 
-    - name: Build
-      run: go build -o key-manager
+    - name: Install gox
+      run: |
+        go get github.com/mitchellh/gox
+
+    - name: Cross-compile binaries with gox
+      run: |
+        gox -osarch="darwin/amd64 darwin/arm64 windows/amd64 linux/amd64" -output "dist/{{.Dir}}_{{.OS}}_{{.Arch}}"
 
     - name: Install FPM
       run: |
@@ -28,8 +33,15 @@ jobs:
 
     - name: Build packages with FPM
       run: |
-        fpm -s dir -t deb -n key-manager -v 1.0.0 ./key-manager=/usr/local/bin/key-manager ./install.sh=/usr/local/bin/install-key-manager.sh
-        fpm -s dir -t rpm -n key-manager -v 1.0.0 ./key-manager=/usr/local/bin/key-manager ./install.sh=/usr/local/bin/install-key-manager.sh
+        fpm -s dir -t deb -n key-manager -v 1.0.0 ./dist/key-manager_linux_amd64=/usr/local/bin/key-manager ./install.sh=/usr/local/bin/install-key-manager.sh
+        fpm -s dir -t rpm -n key-manager -v 1.0.0 ./dist/key-manager_linux_amd64=/usr/local/bin/key-manager ./install.sh=/usr/local/bin/install-key-manager.sh
+
+    - name: Create Tarballs
+      run: |
+        tar czvf key-manager_linux_amd64.tar.gz -C dist key-manager_linux_amd64
+        tar czvf key-manager_darwin_amd64.tar.gz -C dist key-manager_darwin_amd64
+        tar czvf key-manager_darwin_arm64.tar.gz -C dist key-manager_darwin_arm64
+        tar czvf key-manager_windows_amd64.tar.gz -C dist key-manager_windows_amd64.exe
 
     - name: Upload DEB package
       uses: actions/upload-artifact@v2
@@ -42,6 +54,12 @@ jobs:
       with:
         name: rpm-package
         path: '*.rpm'
+
+    - name: Upload Tarballs
+      uses: actions/upload-artifact@v2
+      with:
+        name: tarballs
+        path: '*.tar.gz'
 
   deploy:
     needs: build
@@ -57,6 +75,11 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: rpm-package
+
+    - name: Download Tarballs
+      uses: actions/download-artifact@v2
+      with:
+        name: tarballs
 
     - name: Upload DEB package to packagecloud
       uses: danielmundi/upload-packagecloud@v1
@@ -74,4 +97,13 @@ jobs:
         PACKAGECLOUD-USERNAME: ${{ secrets.PACKAGECLOUD_USERNAME }}
         PACKAGECLOUD-REPO: ${{ secrets.PACKAGECLOUD_REPOSITORY }}
         PACKAGECLOUD-DISTRIB: 'el/8'
+        PACKAGECLOUD-TOKEN: ${{ secrets.PACKAGECLOUD_API_TOKEN }}
+
+    - name: Upload Tarballs to packagecloud
+      uses: danielmundi/upload-packagecloud@v1
+      with:
+        PACKAGE-NAME: '*.tar.gz'
+        PACKAGECLOUD-USERNAME: ${{ secrets.PACKAGECLOUD_USERNAME }}
+        PACKAGECLOUD-REPO: ${{ secrets.PACKAGECLOUD_REPOSITORY }}
+        PACKAGECLOUD-DISTRIB: 'generic'
         PACKAGECLOUD-TOKEN: ${{ secrets.PACKAGECLOUD_API_TOKEN }}
