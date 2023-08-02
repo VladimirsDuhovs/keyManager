@@ -1,0 +1,54 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.20
+
+    - name: Build
+      run: go build -o key-manager
+
+    - name: Install Docker
+      run: |
+        sudo apt-get update
+        sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+        sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+        sudo apt-get update
+        sudo apt-get install docker-ce
+
+    - name: Build packages with FPM
+      run: |
+        sudo docker run --rm -v "$(pwd):/src" cdrx/fpm
+        sudo docker exec -it fpm fpm -s dir -t deb -n key-manager -v 1.0.0 /src/key-manager=/usr/local/bin/key-manager /src/install.sh=/usr/local/bin/install-key-manager.sh
+        sudo docker exec -it fpm fpm -s dir -t rpm -n key-manager -v 1.0.0 /src/key-manager=/usr/local/bin/key-manager /src/install.sh=/usr/local/bin/install-key-manager.sh
+
+    - name: Deploy DEB package to packagecloud
+      uses: packagecloud/packagecloud-action@v1
+      with:
+        username: ${{ secrets.PACKAGECLOUD_USERNAME }}
+        repository: ${{ secrets.PACKAGECLOUD_REPOSITORY }}
+        token: ${{ secrets.PACKAGECLOUD_API_TOKEN }}
+        dist: 'ubuntu/trusty'
+        package_glob: '*.deb'
+
+    - name: Deploy RPM package to packagecloud
+      uses: packagecloud/packagecloud-action@v1
+      with:
+        username: ${{ secrets.PACKAGECLOUD_USERNAME }}
+        repository: ${{ secrets.PACKAGECLOUD_REPOSITORY }}
+        token: ${{ secrets.PACKAGECLOUD_API_TOKEN }}
+        dist: 'centos/7'
+        package_glob: '*.rpm'
