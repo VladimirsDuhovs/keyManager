@@ -90,8 +90,8 @@ jobs:
         api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
         command: 'push'
         format: 'deb'
-        owner: 'OWNER'             # Your Cloudsmith account name or org name (namespace)
-        repo: 'REPOSITORY'         # Your Cloudsmith Repository name (slug)
+        owner: 'VladimirsDuhovs'             # Your Cloudsmith account name or org name (namespace)
+        repo: 'key-manager'         # Your Cloudsmith Repository name (slug)
         distro: 'ubuntu'           # Your Distribution (i.e Debian, Ubuntu)
         release: 'trusty'          # Your Distribution Release (i.e xenial, buster)
         republish: 'true'          # needed ONLY if version is not changing
@@ -103,8 +103,8 @@ jobs:
         api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
         command: 'push'
         format: 'rpm'
-        owner: 'OWNER'             # Your Cloudsmith account name or org name (namespace)
-        repo: 'REPOSITORY'         # Your Cloudsmith Repository name (slug)
+        owner: 'VladimirsDuhovs'             # Your Cloudsmith account name or org name (namespace)
+        repo: 'key-manager'         # Your Cloudsmith Repository name (slug)
         distro: 'el'               # Your Distribution (i.e el, fedora)
         release: '8'               # Your Distribution Release (i.e 7, 32)
         republish: 'true'          # needed ONLY if version is not changing
@@ -116,8 +116,8 @@ jobs:
         api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
         command: 'push'
         format: 'raw'
-        owner: 'OWNER'              # Your Cloudsmith account name or org name (namespace)
-        repo: 'REPOSITORY'          # Your Cloudsmith Repository name (slug)
+        owner: 'VladimirsDuhovs'              # Your Cloudsmith account name or org name (namespace)
+        repo: 'key-manager'          # Your Cloudsmith Repository name (slug)
         file: '*.tar.gz'            # Name of file
         name: 'key-manager'         # Name for Raw package
         summary: 'key-manager summary'  # Optional Summary for Raw Package
