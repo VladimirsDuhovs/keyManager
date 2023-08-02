@@ -35,20 +35,47 @@ jobs:
         sudo docker exec -it fpm fpm -s dir -t deb -n key-manager -v 1.0.0 /src/key-manager=/usr/local/bin/key-manager /src/install.sh=/usr/local/bin/install-key-manager.sh
         sudo docker exec -it fpm fpm -s dir -t rpm -n key-manager -v 1.0.0 /src/key-manager=/usr/local/bin/key-manager /src/install.sh=/usr/local/bin/install-key-manager.sh
 
-    - name: Deploy DEB package to packagecloud
-      uses: packagecloud/packagecloud-action@v1
+    - name: Upload DEB package
+      uses: actions/upload-artifact@v2
       with:
-        username: ${{ secrets.PACKAGECLOUD_USERNAME }}
-        repository: ${{ secrets.PACKAGECLOUD_REPOSITORY }}
-        token: ${{ secrets.PACKAGECLOUD_API_TOKEN }}
-        dist: 'ubuntu/trusty'
-        package_glob: '*.deb'
+        name: deb-package
+        path: '*.deb'
 
-    - name: Deploy RPM package to packagecloud
-      uses: packagecloud/packagecloud-action@v1
+    - name: Upload RPM package
+      uses: actions/upload-artifact@v2
       with:
-        username: ${{ secrets.PACKAGECLOUD_USERNAME }}
-        repository: ${{ secrets.PACKAGECLOUD_REPOSITORY }}
-        token: ${{ secrets.PACKAGECLOUD_API_TOKEN }}
-        dist: 'centos/7'
-        package_glob: '*.rpm'
+        name: rpm-package
+        path: '*.rpm'
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download DEB package
+      uses: actions/download-artifact@v2
+      with:
+        name: deb-package
+
+    - name: Download RPM package
+      uses: actions/download-artifact@v2
+      with:
+        name: rpm-package
+
+    - name: Upload DEB package to packagecloud
+      uses: danielmundi/upload-packagecloud@v1
+      with:
+        PACKAGE-NAME: '*.deb'
+        PACKAGECLOUD-USERNAME: ${{ secrets.PACKAGECLOUD_USERNAME }}
+        PACKAGECLOUD-REPO: ${{ secrets.PACKAGECLOUD_REPOSITORY }}
+        PACKAGECLOUD-DISTRIB: 'ubuntu/trusty'
+        PACKAGECLOUD-TOKEN: ${{ secrets.PACKAGECLOUD_API_TOKEN }}
+
+    - name: Upload RPM package to packagecloud
+      uses: danielmundi/upload-packagecloud@v1
+      with:
+        PACKAGE-NAME: '*.rpm'
+        PACKAGECLOUD-USERNAME: ${{ secrets.PACKAGECLOUD_USERNAME }}
+        PACKAGECLOUD-REPO: ${{ secrets.PACKAGECLOUD_REPOSITORY }}
+        PACKAGECLOUD-DISTRIB: 'centos/7'
+        PACKAGECLOUD-TOKEN: ${{ secrets.PACKAGECLOUD_API_TOKEN }}
