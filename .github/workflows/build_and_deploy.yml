@@ -45,6 +45,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
     - name: Download Tarballs
       uses: actions/download-artifact@v2
       with:
@@ -108,8 +111,6 @@ jobs:
 
     - name: Update metadata
       run: |
-        pwd
-        ls -la
         METADATA='
         {
           "version": "'${{ github.sha }}'",
@@ -122,12 +123,12 @@ jobs:
             "linux": "https://dl.cloudsmith.io/public/vladimirsduhovs/key-manager/raw/names/keyManager_linux_arm64/versions/${{ github.sha }}/keyManager.tar.gz"
           }
         }'
-        echo "$METADATA" > ./installation_scripts/metadata.json
+        echo "$METADATA" > installation_scripts/metadata.json
 
     - name: Commit and push metadata.json
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add ./installation_scripts/metadata.json
+        git add installation_scripts/metadata.json
         git commit -m "Update installation_scripts/metadata.json with new versions [skip ci]" && echo 'Commit success' || echo 'No changes to commit'
         git push https://${{ secrets.GH_PAT }}@github.com/vladimirsduhovs/keyManager.git HEAD:main
