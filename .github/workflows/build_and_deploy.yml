@@ -108,16 +108,18 @@ jobs:
 
     - name: Update metadata
       run: |
+        pwd
+        ls -la
         METADATA='
         {
           "version": "'${{ github.sha }}'",
           "amd64": {
-            "darwin": "https://dl.cloudsmith.io/public/vladimirsduhovs/keyManager/raw/names/keyManager_darwin_amd64/versions/${{ github.sha }}/keyManager.tar.gz",
-            "linux": "https://dl.cloudsmith.io/public/vladimirsduhovs/keyManager/raw/names/keyManager_linux_amd64/versions/${{ github.sha }}/keyManager.tar.gz"
+            "darwin": "https://dl.cloudsmith.io/public/vladimirsduhovs/key-manager/raw/names/keyManager_darwin_amd64/versions/${{ github.sha }}/keyManager.tar.gz",
+            "linux": "https://dl.cloudsmith.io/public/vladimirsduhovs/key-manager/raw/names/keyManager_linux_amd64/versions/${{ github.sha }}/keyManager.tar.gz"
           },
           "arm64": {
-            "darwin": "https://dl.cloudsmith.io/public/vladimirsduhovs/keyManager/raw/names/keyManager_darwin_arm64/versions/${{ github.sha }}/keyManager.tar.gz",
-            "linux": "https://dl.cloudsmith.io/public/vladimirsduhovs/keyManager/raw/names/keyManager_linux_arm64/versions/${{ github.sha }}/keyManager.tar.gz"
+            "darwin": "https://dl.cloudsmith.io/public/vladimirsduhovs/key-manager/raw/names/keyManager_darwin_arm64/versions/${{ github.sha }}/keyManager.tar.gz",
+            "linux": "https://dl.cloudsmith.io/public/vladimirsduhovs/key-manager/raw/names/keyManager_linux_arm64/versions/${{ github.sha }}/keyManager.tar.gz"
           }
         }'
         echo "$METADATA" > ./installation_scripts/metadata.json

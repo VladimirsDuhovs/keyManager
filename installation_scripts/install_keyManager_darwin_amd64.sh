@@ -6,7 +6,7 @@ APPLICATION="keyManager"
 curl -o metadata.json -sSL $METADATA_URL
 
 # Get the download URL
-URL=$(python -c "import json; print(json.load(open('metadata.json'))['macos_amd64'])")
+URL=$(python -c "import json; print(json.load(open('metadata.json'))['amd64']['darwin'])")
 
 # Download the tarball
 curl -o app.tar.gz -sSL $URL
