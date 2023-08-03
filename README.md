@@ -21,7 +21,9 @@ KeyManager leverages a couple of essential libraries to offer a user-friendly ex
 
 - [Pretty-Table](https://github.com/jedib0t/go-pretty): This library is used for creating formatted and visually appealing printouts in the terminal.
 
-## Getting Started
+## Installation
+
+### Install from source
 
 1. Clone the repository:
 ```sh
@@ -39,6 +41,25 @@ cd keyManager
 go build
 ```
 
+### Install with a script
+
+Each installation script is tailored for a specific operating system and architecture. To install the latest version of KeyManager for your specific system, use the relevant script from the table below:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/VladimirsDuhovs/keyManager/main/installation_scripts/<installation_script_for_your_os_architecture>.sh | sh
+```
+
+This script will download the appropriate binary and place it in your `/usr/local/bin` directory.
+
+## Installation Scripts
+
+| OS    | Architecture | Script |
+| ------|:------------:| ------:|
+| Darwin (Mac) | AMD64 | [Download](https://raw.githubusercontent.com/VladimirsDuhovs/keyManager/main/installation_scripts/install_keyManager_darwin_amd64.sh) |
+| Darwin (Mac) | ARM64 | [Download](https://raw.githubusercontent.com/VladimirsDuhovs/keyManager/main/installation_scripts/install_keyManager_darwin_arm64.sh) |
+| Linux  | AMD64 | [Download](https://raw.githubusercontent.com/VladimirsDuhovs/keyManager/main/installation_scripts/install_keyManager_linux_amd64.sh) |
+| Linux  | ARM64 | [Download](https://raw.githubusercontent.com/VladimirsDuhovs/keyManager/main/installation_scripts/install_keyManager_linux_arm64.sh) |
+
 ## Commands
 
 Here is a list of available commands:
@@ -46,24 +67,24 @@ Here is a list of available commands:
 - Create a new key:
 
 ```sh
-./keyManager create --key <key_name>
+keyManager create --key <key_name>
 ```
 
 - Copy a key to a specific path:
 
 ```sh
-./keyManager copy --key <key_name> --output <path_to_copy>
+keyManager copy --key <key_name> --output <path_to_copy>
 ```
 
 - Print the copy history of a key:
 
 ```sh
-./keyManager history --key <key_name>
+keyManager history --key <key_name>
 ```
 
 - Delete a key (requires user confirmation):
 ```sh
-./keyManager delete --key <key_name>
+keyManager delete --key <key_name>
 ```
 
 ## Contributing

@@ -15,48 +15,24 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v2
       with:
-        go-version: 1.17
+        go-version: 1.20.7
 
-    - name: Install gox
+    - name: Build for amd64
       run: |
-        go get github.com/mitchellh/gox
+        env GOOS=darwin GOARCH=amd64 go build -o dist/keyManager_darwin_amd64
+        env GOOS=linux GOARCH=amd64 go build -o dist/keyManager_linux_amd64
 
-    - name: Cross-compile binaries with gox
+    - name: Build for arm64
       run: |
-        gox -osarch="darwin/amd64 darwin/arm64 windows/amd64 linux/amd64" -output "dist/key-manager_{{.OS}}_{{.Arch}}"
-
-    - name: List the contents of the dist directory
-      run: ls -la dist
-
-    - name: Install FPM
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y ruby ruby-dev rubygems build-essential rpm
-        sudo gem install --no-document fpm
-
-    - name: Build packages with FPM
-      run: |
-        fpm -s dir -t deb -n key-manager -v 1.0.0 ./dist/key-manager_linux_amd64=/usr/local/bin/key-manager_linux_amd64 ./install.sh=/usr/local/bin/install-key-manager.sh
-        fpm -s dir -t rpm -n key-manager -v 1.0.0 ./dist/key-manager_linux_amd64=/usr/local/bin/key-manager_linux_amd64 ./install.sh=/usr/local/bin/install-key-manager.sh
+        env GOOS=darwin GOARCH=arm64 go build -o dist/keyManager_darwin_arm64
+        env GOOS=linux GOARCH=arm64 go build -o dist/keyManager_linux_arm64
 
     - name: Create Tarballs
       run: |
-        tar czvf key-manager_linux_amd64.tar.gz -C dist key-manager_linux_amd64
-        tar czvf key-manager_darwin_amd64.tar.gz -C dist key-manager_darwin_amd64
-        tar czvf key-manager_darwin_arm64.tar.gz -C dist key-manager_darwin_arm64
-        tar czvf key-manager_windows_amd64.tar.gz -C dist key-manager_windows_amd64.exe
-
-    - name: Upload DEB package
-      uses: actions/upload-artifact@v2
-      with:
-        name: deb-package
-        path: '*.deb'
-
-    - name: Upload RPM package
-      uses: actions/upload-artifact@v2
-      with:
-        name: rpm-package
-        path: '*.rpm'
+        tar czvf keyManager_darwin_amd64.tar.gz -C dist keyManager_darwin_amd64
+        tar czvf keyManager_darwin_arm64.tar.gz -C dist keyManager_darwin_arm64
+        tar czvf keyManager_linux_amd64.tar.gz -C dist keyManager_linux_amd64
+        tar czvf keyManager_linux_arm64.tar.gz -C dist keyManager_linux_arm64
 
     - name: Upload Tarballs
       uses: actions/upload-artifact@v2
@@ -69,33 +45,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Download DEB package
-      uses: actions/download-artifact@v2
-      with:
-        name: deb-package
-
-    - name: Download RPM package
-      uses: actions/download-artifact@v2
-      with:
-        name: rpm-package
-
     - name: Download Tarballs
       uses: actions/download-artifact@v2
       with:
         name: tarballs
-
-    - name: Upload DEB package to Cloudsmith
-      uses: cloudsmith-io/action@master
-      with:
-        api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
-        command: 'push'
-        format: 'deb'
-        owner: 'vladimirsduhovs'             # Your Cloudsmith account name or org name (namespace)
-        repo: 'key-manager'         # Your Cloudsmith Repository name (slug)
-        distro: 'ubuntu'           # Your Distribution (i.e Debian, Ubuntu)
-        release: 'trusty'          # Your Distribution Release (i.e xenial, buster)
-        republish: 'true'          # needed ONLY if version is not changing
-        file: '*.deb'              # debian package filename
 
     - name: Upload Darwin AMD64 Tarball to Cloudsmith
       uses: cloudsmith-io/action@master
@@ -105,10 +58,10 @@ jobs:
         format: 'raw'
         owner: 'vladimirsduhovs'
         repo: 'key-manager'
-        file: 'key-manager_darwin_amd64.tar.gz'
-        name: 'key-manager_darwin_amd64'
-        summary: 'key-manager summary'
-        description: 'key-manager description'
+        file: 'keyManager_darwin_amd64.tar.gz'
+        name: 'keyManager_darwin_amd64'
+        summary: 'keyManager summary'
+        description: 'keyManager description'
         version: ${{ github.sha }}
 
     - name: Upload Darwin ARM64 Tarball to Cloudsmith
@@ -119,10 +72,10 @@ jobs:
         format: 'raw'
         owner: 'vladimirsduhovs'
         repo: 'key-manager'
-        file: 'key-manager_darwin_arm64.tar.gz'
-        name: 'key-manager_darwin_arm64'
-        summary: 'key-manager summary'
-        description: 'key-manager description'
+        file: 'keyManager_darwin_arm64.tar.gz'
+        name: 'keyManager_darwin_arm64'
+        summary: 'keyManager summary'
+        description: 'keyManager description'
         version: ${{ github.sha }}
 
     - name: Upload Linux AMD64 Tarball to Cloudsmith
@@ -133,13 +86,13 @@ jobs:
         format: 'raw'
         owner: 'vladimirsduhovs'
         repo: 'key-manager'
-        file: 'key-manager_linux_amd64.tar.gz'
-        name: 'key-manager_linux_amd64'
-        summary: 'key-manager summary'
-        description: 'key-manager description'
+        file: 'keyManager_linux_amd64.tar.gz'
+        name: 'keyManager_linux_amd64'
+        summary: 'keyManager summary'
+        description: 'keyManager description'
         version: ${{ github.sha }}
 
-    - name: Upload Windows AMD64 Tarball to Cloudsmith
+    - name: Upload Linux ARM64 Tarball to Cloudsmith
       uses: cloudsmith-io/action@master
       with:
         api-key: ${{ secrets.CLOUDSMITH_API_KEY }}
@@ -147,8 +100,32 @@ jobs:
         format: 'raw'
         owner: 'vladimirsduhovs'
         repo: 'key-manager'
-        file: 'key-manager_windows_amd64.tar.gz'
-        name: 'key-manager_windows_amd64'
-        summary: 'key-manager summary'
-        description: 'key-manager description'
+        file: 'keyManager_linux_arm64.tar.gz'
+        name: 'keyManager_linux_arm64'
+        summary: 'keyManager summary'
+        description: 'keyManager description'
         version: ${{ github.sha }}
+
+    - name: Update metadata
+      run: |
+        METADATA='
+        {
+          "version": "'${{ github.sha }}'",
+          "amd64": {
+            "darwin": "https://dl.cloudsmith.io/public/vladimirsduhovs/keyManager/raw/names/keyManager_darwin_amd64/versions/${{ github.sha }}/keyManager.tar.gz",
+            "linux": "https://dl.cloudsmith.io/public/vladimirsduhovs/keyManager/raw/names/keyManager_linux_amd64/versions/${{ github.sha }}/keyManager.tar.gz"
+          },
+          "arm64": {
+            "darwin": "https://dl.cloudsmith.io/public/vladimirsduhovs/keyManager/raw/names/keyManager_darwin_arm64/versions/${{ github.sha }}/keyManager.tar.gz",
+            "linux": "https://dl.cloudsmith.io/public/vladimirsduhovs/keyManager/raw/names/keyManager_linux_arm64/versions/${{ github.sha }}/keyManager.tar.gz"
+          }
+        }'
+        echo "$METADATA" > installation_scripts/metadata.json
+
+    - name: Commit and push installation_scripts/metadata.json
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add installation_scripts/metadata.json
+        git commit -m "Update installation_scripts/metadata.json with new versions [skip ci]" && echo 'Commit success' || echo 'No changes to commit'
+        git push https://${{ secrets.GH_PAT }}@github.com/vladimirsduhovs/keyManager.git HEAD:main
