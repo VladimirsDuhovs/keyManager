@@ -1,0 +1,12 @@
+
+{
+  "version": "0196bae6b32612301f61cc3b52576e7da7c5240e",
+  "amd64": {
+    "darwin": "https://dl.cloudsmith.io/public/vladimirsduhovs/key-manager/raw/names/keyManager_darwin_amd64/versions/0196bae6b32612301f61cc3b52576e7da7c5240e/keyManager.tar.gz",
+    "linux": "https://dl.cloudsmith.io/public/vladimirsduhovs/key-manager/raw/names/keyManager_linux_amd64/versions/0196bae6b32612301f61cc3b52576e7da7c5240e/keyManager.tar.gz"
+  },
+  "arm64": {
+    "darwin": "https://dl.cloudsmith.io/public/vladimirsduhovs/key-manager/raw/names/keyManager_darwin_arm64/versions/0196bae6b32612301f61cc3b52576e7da7c5240e/keyManager.tar.gz",
+    "linux": "https://dl.cloudsmith.io/public/vladimirsduhovs/key-manager/raw/names/keyManager_linux_arm64/versions/0196bae6b32612301f61cc3b52576e7da7c5240e/keyManager.tar.gz"
+  }
+}
