@@ -1,12 +1,6 @@
 #!/bin/bash
-METADATA_URL="https://raw.githubusercontent.com/VladimirsDuhovs/keyManager/main/installation_scripts/metadata.json"
 APPLICATION="keyManager"
-
-# Download the metadata.json file
-curl -o metadata.json -sSL $METADATA_URL
-
-# Get the download URL
-URL=$(python -c "import json; print(json.load(open('metadata.json'))['amd64']['linux'])")
+URL="__PACKAGE_URL__"
 
 # Download the tarball
 curl -o app.tar.gz -sSL $URL

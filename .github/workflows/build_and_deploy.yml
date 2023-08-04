@@ -111,26 +111,17 @@ jobs:
         description: 'keyManager description'
         version: ${{ github.sha }}
 
-    - name: Update metadata
+    - name: Update installation scripts
       run: |
-        METADATA='
-        {
-          "version": "'${{ github.sha }}'",
-          "amd64": {
-            "darwin": "https://dl.cloudsmith.io/public/vladimirsduhovs/key-manager/raw/names/keyManager_darwin_amd64/versions/${{ github.sha }}/keyManager.tar.gz",
-            "linux": "https://dl.cloudsmith.io/public/vladimirsduhovs/key-manager/raw/names/keyManager_linux_amd64/versions/${{ github.sha }}/keyManager.tar.gz"
-          },
-          "arm64": {
-            "darwin": "https://dl.cloudsmith.io/public/vladimirsduhovs/key-manager/raw/names/keyManager_darwin_arm64/versions/${{ github.sha }}/keyManager.tar.gz",
-            "linux": "https://dl.cloudsmith.io/public/vladimirsduhovs/key-manager/raw/names/keyManager_linux_arm64/versions/${{ github.sha }}/keyManager.tar.gz"
-          }
-        }'
-        echo "$METADATA" > installation_scripts/metadata.json
-
-    - name: Commit and push metadata.json
-      run: |
+        for ARCH in amd64 arm64; do
+          for OS in darwin linux; do
+            URL="https://dl.cloudsmith.io/public/vladimirsduhovs/key-manager/raw/names/keyManager_${OS}_${ARCH}/versions/${{ github.sha }}/keyManager.tar.gz"
+            FILE="installation_scripts/install_keyManager_${OS}_${ARCH}.sh"
+            sed -i "s|__PACKAGE_URL__|$URL|g" $FILE
+            git add $FILE
+          done
+        done
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add installation_scripts/metadata.json
-        git commit -m "Update installation_scripts/metadata.json with new versions [skip ci]" && echo 'Commit success' || echo 'No changes to commit'
+        git commit -m "Update installation scripts with new versions [skip ci]" && echo 'Commit success' || echo 'No changes to commit'
         git push -u origin main
