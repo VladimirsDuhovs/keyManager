@@ -1,6 +1,6 @@
 #!/bin/bash
 APPLICATION="keyManager"
-URL="__PACKAGE_URL__"
+URL="https://dl.cloudsmith.io/public/vladimirsduhovs/key-manager/raw/names/keyManager_darwin_arm64/versions/5323e1b9d0f71f098ead38778da167df4e90c7ad/keyManager.tar.gz"
 
 # Download the tarball
 curl -o app.tar.gz -sSL $URL
